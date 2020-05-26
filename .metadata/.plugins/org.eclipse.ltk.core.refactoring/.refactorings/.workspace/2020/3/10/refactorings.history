@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;Pcap-Parser&apos;" deleteContents="true" description="Delete resource &apos;Pcap-Parser&apos;" element1="/Pcap-Parser" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1583316716657"/>
+</session>

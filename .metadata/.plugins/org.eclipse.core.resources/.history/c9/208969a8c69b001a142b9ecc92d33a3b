@@ -1,0 +1,171 @@
+package com.java.pcapparser;
+
+import io.pkts.PacketHandler;
+import io.pkts.Pcap;
+import io.pkts.packet.IPPacket;
+import io.pkts.packet.MACPacket;
+import io.pkts.packet.PCapPacket;
+import io.pkts.packet.Packet;
+import io.pkts.packet.TCPPacket;
+import io.pkts.packet.UDPPacket;
+import io.pkts.protocol.Protocol;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.io.IOException;
+
+public class Main {
+	//Расположение файла .pcap
+	private static final String DUMP = "D:\\2017-02-22_win8.pcap";
+
+	private static Connection dbConnection;
+
+	public static void main(String[] args) throws IOException {
+		
+		try{
+			//Создание потока из дампа
+		final Pcap pcap = Pcap.openStream(DUMP);
+		// Создание цикла, в котором будет вестись обработка каждого пакета
+		pcap.loop(new PacketHandler() {
+			@Override
+			public boolean nextPacket(Packet packet) throws IOException {
+				// Поля с данными для БД
+				String timeStamp = null;
+				String packetLength = null;
+				String isIP = null;
+				String ipSource = null;
+				String ipDestination = null;
+				String protocolType = null;
+				String portSource = null;
+				String portDestination = null;
+
+				//получение TIME_STAMP
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS");
+				Date date = new Date(packet.getArrivalTime() / 1000);
+				timeStamp = formatter.format(date);
+				
+				if(packet.hasProtocol(Protocol.PCAP))
+				{
+					PCapPacket pCapPacket = (PCapPacket) packet.getPacket(Protocol.PCAP);
+					//получение PACKET_LENGTH
+					packetLength = Long.toString(pCapPacket.getTotalLength());
+					//Если пакет относится к IP пакетам
+					if (pCapPacket.hasProtocol(Protocol.IPv4) || pCapPacket.hasProtocol(Protocol.IGMP)
+							|| pCapPacket.hasProtocol(Protocol.ICMP))
+					{
+						//получениеIS_IP
+						isIP = "YES";
+						
+						IPPacket ipPacket = null;
+						if(pCapPacket.hasProtocol(Protocol.IPv4))
+							ipPacket = (IPPacket) pCapPacket.getPacket(Protocol.IPv4);
+						else if(pCapPacket.hasProtocol(Protocol.IGMP))
+							ipPacket = (IPPacket) pCapPacket.getPacket(Protocol.IGMP);
+						else if(pCapPacket.hasProtocol(Protocol.ICMP))
+							ipPacket = (IPPacket) pCapPacket.getPacket(Protocol.ICMP);
+						
+						//получение IP_SOURCE
+						ipSource = ipPacket == null ? null : ipPacket.getSourceIP();
+						//получение IP_DESTINATION
+						ipDestination = ipPacket == null ? null :  ipPacket.getDestinationIP();
+						
+						if(ipPacket.hasProtocol(Protocol.TCP))
+						{
+							// Это TCP пакет
+							TCPPacket tcpPacket = (TCPPacket) ipPacket.getPacket(Protocol.TCP);
+							//получение PROTOCOL_TYPE
+							protocolType = "TCP";
+							//получение PORT_SOURCE
+							portSource = Integer.toString(tcpPacket.getSourcePort());
+							//получение PORT_DESTINATION
+							portDestination = Integer.toString(tcpPacket.getDestinationPort());
+						}
+						else if(ipPacket.hasProtocol(Protocol.UDP))
+						{
+							// Это UDPпакет
+							UDPPacket udpPacket = (UDPPacket) ipPacket.getPacket(Protocol.UDP);
+							//получение PROTOCOL_TYPE
+							protocolType = "UDP";
+							//получение PORT_SOURCE
+							portSource = Integer.toString(udpPacket.getSourcePort());
+							//получение PORT_DSTINATION
+							portDestination = Integer.toString(udpPacket.getDestinationPort());
+
+							
+						}
+						else
+							//получение PROTOCOL_TYPE
+							protocolType = "OTHER";
+							
+						
+					}
+					else
+					{
+						//получение IS_IP
+						isIP="No";
+						//получение PROTOCOL_TYPE
+						protocolType = "OTHER";
+					}
+				}
+				
+				//Вставка данных в таблицу в БД
+				insert(timeStamp, packetLength, isIP, ipSource, ipDestination, protocolType, portSource,
+						portDestination);
+				return true;
+			}
+		});
+
+		}
+		catch (Exception e)
+		{
+			System.out.print("das");
+		}
+
+	}
+
+	private static void insert(String timeStamp, String packetLength, String isIP, String ipSource,
+			String ipDestination, String protocolType, String portSource, String portDestination) {
+		String insert = "INSERT INTO dump_small.dump_all_packets(" + Const.TIME_STAMP + "," + Const.PACKET_LENGTH + "," + Const.IS_IP
+				+ "," + Const.IP_SOURCE + "," + Const.IP_DESTINATION +"," + Const.PPROTOCOL_TYPE +","
+				+ Const.PORT_SOURCE +","+ Const.PORT_DESTINATION + ") VALUES(?,?,?,?,?,?,?,?);";
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = getdbConnection().prepareStatement(insert);
+			preparedStatement.setString(1, timeStamp);
+			preparedStatement.setString(2, packetLength);
+			preparedStatement.setString(3, isIP);
+			preparedStatement.setString(4, ipSource);
+			preparedStatement.setString(5, ipDestination);
+			preparedStatement.setString(6, protocolType);
+			preparedStatement.setString(7, portSource);
+			preparedStatement.setString(8, portDestination);
+			
+			preparedStatement.execute();
+			dbConnection.close();
+			preparedStatement.close();
+			
+
+		} catch (ClassNotFoundException e) {
+			System.out.println("Failed1...");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			System.out.println("Failed2...");
+			e.printStackTrace();
+		}
+
+	}
+
+	//Установка соедпнения с БД
+	private static Connection getdbConnection() throws SQLException, ClassNotFoundException {
+		String url = "jdbc:mysql://localhost/dump_small?useUnicode=true&serverTimezone=UTC";
+		String username = "root";
+		String password = "admin";
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		dbConnection = DriverManager.getConnection(url, username, password);
+		return dbConnection;
+	}
+
+}

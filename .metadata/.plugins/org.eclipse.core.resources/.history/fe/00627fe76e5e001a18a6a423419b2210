@@ -1,0 +1,37 @@
+package com.java.pcapparser;
+
+import io.pkts.PacketHandler;
+import io.pkts.Pcap;
+import io.pkts.buffer.Buffer;
+import io.pkts.packet.Packet;
+import io.pkts.packet.TCPPacket;
+import io.pkts.packet.UDPPacket;
+import io.pkts.protocol.Protocol;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+public class Main {
+
+	private static final String DUMP = "D:\\Dump\\2015-07-28_mixed.pcap";
+	
+	public static void main(String[] args) throws IOException{
+		try{
+            String url = "jdbc:mysql://localhost/dumphcap";
+            String username = "root";
+            String password = "admin";
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            try (Connection conn = DriverManager.getConnection(url, username, password)){
+                 
+               System.out.println("Connection to Store DB succesfull!");
+            }
+        }
+        catch(Exception ex){
+            System.out.println("Connection failed...");
+             
+            System.out.println(ex);
+        }
+	}
+
+}

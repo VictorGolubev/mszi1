@@ -1,0 +1,23 @@
+
+_
+java:S1148œ"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8œ»ÀŠ.H¾RMINORZVULNERABILITY
+m
+java:S1128"5Remove this unused import 'io.pkts.packet.MACPacket'.(¥óÿıÿÿÿÿ8Ñª§ğ.H½RMINORZ
+CODE_SMELL
+l	java:S106›"9Replace this use of System.out or System.err by a logger.(ßÖı¬8ÇŒ´¹Š.HÅRMAJORZ
+CODE_SMELL
+ˆ
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 28 to the 15 allowed.(œû¿Ø8ªËÌú.HÂRCRITICALZ
+CODE_SMELL
+p	java:S106|"9Replace this use of System.out or System.err by a logger.(‹½úˆÿÿÿÿÿ8ë®Ğ¢.HÆRMAJORZ
+CODE_SMELL
+_
+java:S1148™"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8§¨÷ÀŠ.HÃRMINORZVULNERABILITY
+w
+java:S2259K"FA "NullPointerException" could be thrown; "ipPacket" is nullable here.(–Ãßøûÿÿÿÿ8íÍ¨û.HÁRMAJORZBUG
+ƒ
+java:S2095ˆ"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ÌŞÑÙùÿÿÿÿ8§¨÷ÀŠ.HÀRBLOCKERZBUG
+o	java:S107"<Method has 8 parameters, which is greater than 7 authorized.(¯Ï²8œ»ÀŠ.HÄRMAJORZ
+CODE_SMELL
+q	java:S106˜"9Replace this use of System.out or System.err by a logger.(Ùƒ¡Ëÿÿÿÿÿ8ŸŸñÀŠ.H¿RMAJORZ
+CODE_SMELL

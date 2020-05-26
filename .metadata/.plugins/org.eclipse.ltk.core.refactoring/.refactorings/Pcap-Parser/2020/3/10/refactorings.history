@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename local variable &apos;tcpPacket&apos; in &apos;com.java.pcapparser.Main.main(...).new PacketHandler() {...}.nextPacket(...)&apos; to &apos;udpPacket&apos;&#x0D;&#x0A;- Original project: &apos;Pcap-Parser&apos;&#x0D;&#x0A;- Original element: &apos;com.java.pcapparser.Main.main(...).new PacketHandler() {...}.nextPacket(Packet).tcpPacket&apos;&#x0D;&#x0A;- Renamed element: &apos;tcpPacket&apos;&#x0D;&#x0A;- Update references to refactored element" description="Rename local variable &apos;tcpPacket&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/src\/main\/java&lt;com.java.pcapparser{Main.java[Main~main~\[QString;[~nextPacket~QPacket;@tcpPacket!2174!2238!2184!2192!QUDPPacket;!0!false" name="udpPacket" references="true" stamp="1583370396527" version="1.0"/>
+</session>

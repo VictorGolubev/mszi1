@@ -1,0 +1,13 @@
+
+d	java:S106"9Replace this use of System.out or System.err by a logger.(¢ŠÈÿHÅRMAJORZ
+CODE_SMELL
+^
+java:S4925"-Remove this "Class.forName()", it is useless.(¹µÖÁüÿÿÿÿHÆRMAJORZ
+CODE_SMELL
+…	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(İ¡ıüHÇRMINORZ
+CODE_SMELL
+W
+java:S1148"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿHÈRMINORZVULNERABILITY
+k	java:S106
+"9Replace this use of System.out or System.err by a logger.(ßë¹8à‰Ÿ.HÉRMAJORZ
+CODE_SMELL
